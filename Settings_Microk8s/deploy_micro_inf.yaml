@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-inferencia
+spec:
+  selector:
+    matchLabels:
+      app: api-inferencia
+  replicas: 8
+  template:
+    metadata:
+      labels:
+        app: api-inferencia
+    spec:
+      nodeName: microk8s01
+      containers:
+      - name: api-inferencia
+        image: mgrodrigues001/api_flask_inferencia:inf_v8.0
+        resources:
+          limits:
+            cpu: "500m"
+        ports:
+        - containerPort: 5001
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: mlruns
+          mountPath: /app/mlruns
+      volumes: 
+      - name: mlruns
+        hostPath: 
+          #path: /home/miguel/Projeto/fraud_detection/mlruns
+          path: /app/mlruns
+          type: Directory

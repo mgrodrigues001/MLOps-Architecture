@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-update
+spec:
+  selector:
+    matchLabels:
+      app: api-update
+  template:
+    metadata:
+      labels:
+        app: api-update
+    spec:
+      nodeName: microk8s02
+      containers:
+      - name: api-update
+        image: mgrodrigues001/api_flask_update:up_v8.1
+        resources:
+          limits:
+            cpu: "2000m"
+            memory: "12Gi"
+        ports:
+        - containerPort: 5002
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: mlruns
+          mountPath: /app/mlruns
+      volumes: 
+      - name: mlruns
+        hostPath: 
+          #path: /home/miguel/Projeto/fraud_detection/mlruns
+          path: /app/mlruns
+          type: Directory
